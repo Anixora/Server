@@ -6,98 +6,105 @@ const FINGER_HASH = "9d19cc5670244fa7bf9e9d970681d33be3a0daaf333401aa4e9d402effe
 /**
  * Оригинальные функции для декодирования токена
  */
-function xorShuffle(Nl: string, Ns: boolean = false): string {
-    var NG = Nl.length;
-    if (NG <= 1) {
-        return Nl;
+function xorShuffle(cD: string, I0: boolean = false): string {
+  var I1 = cD.length;
+  if (I1 <= 1) {
+    return cD;
+  }
+  for (var I2 = 1, I3 = 0; I2 < I1;) {
+    I2 *= 7;
+    I3++;
+  }
+  for (var I4 = function (Ix: number) {
+    for (var IA = 0, Ih = 0; Ih < I3; Ih++) {
+      IA = IA * 7 + Ix % 7;
+      Ix = Math.floor(Ix / 7);
     }
-    for (var NT = 1; NT < NG;) {
-        NT <<= 1;
+    return IA;
+  }, I5 = new Array(I1), I6 = 0; I6 < I1; I6++) {
+    var I7 = I6;
+    var I8 = I6;
+    for (; ;) {
+      var I9 = I4(I7);
+      if (I9 < I1) {
+        I5[I6] = I9;
+        break;
+      }
+      if ((I7 = I9) === I8) {
+        I5[I6] = I6;
+        break;
+      }
     }
-    for (var S0 = [], S1 = 1; S1 < NT; S1 <<= 1) {
-        S0.push(S1);
-    }
-    for (var S2 = Nl.split(""), S3 = S0.length - 1; S3 >= 0; S3--) {
-        for (var S4 = S0[S3], S5 = 0; S5 < NT; S5++) {
-            var S6 = S5 ^ S4;
-            if (S5 < S6 && S5 < NG && S6 < NG) {
-                var S7 = S2[S5];
-                S2[S5] = S2[S6];
-                S2[S6] = S7;
-            }
-        }
-    }
-    var S8 = S2.join("");
-    if (Ns && S8.length > 1) {
-        S8 = S8.slice(-1) + S8.slice(0, -1);
-    }
-    return S8;
+  }
+  for (var If = new Array(I1), IT = 0; IT < I1; IT++) {
+    If[I5[IT]] = IT;
+  }
+  for (var Iz = new Array(I1), Ic = 0; Ic < I1; Ic++) {
+    Iz[If[Ic]] = cD[Ic];
+  }
+  var II = Iz.join("");
+  if (I0 && II.length > 1) {
+    II = II.slice(1) + II[0];
+  }
+  return II;
 }
 
-function modularEncode(Nl: string, Ns: boolean = false): string {
-    for (var NG = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-._~", NT = Object.create(null), S0 = 0; S0 < 66; S0++) {
-        NT[NG[S0]] = S0;
+function modularEncode(cD: string, I0: boolean = false): string {
+  var I1 = cD.length;
+  if (I1 <= 1) {
+    return cD;
+  }
+  for (var I2 = [2, 3, 5, 8, 13, 21], I3 = "", I4 = 0, I5 = 0; I4 < I1; I5++) {
+    for (var I6 = Math.min(I2[I5 % I2.length], I1 - I4), I7 = cD.slice(I4, I4 + I6), I8 = new Array(I6), I9 = 0; I9 < I6; I9++) {
+      I8[I9] = I9 % 2 == 0 ? I9 >> 1 : I6 - 1 - (I9 >> 1);
     }
-    for (var S1 = Nl.length, S2 = "", S3 = 0; S3 < S1; S3 += 2) {
-        var S4 = Nl[S3];
-        var S5 = S3 + 1 < S1 ? Nl[S3 + 1] : "";
-        var S6 = NT[S4];
-        var S7 = S5 ? NT[S5] : undefined;
-        if (S5 && S6 !== undefined && S7 !== undefined) {
-            var S8 = S3 / 2 | 0;
-            var S9 = S7 - (S6 * 5 + (S8 * 11 + 1)) % 66;
-            if (S9 < 0) {
-                S9 += 66;
-            }
-            var SI = S6 - (S9 * 11 + (S8 * 7 + 3)) % 66;
-            if (SI < 0) {
-                SI += 66;
-            }
-            S2 += NG[SI] + NG[S9];
-        } else {
-            S2 += S4 + S5;
-        }
+    for (var If = new Array(I6), IT = 0; IT < I6; IT++) {
+      If[I8[IT]] = I7[IT];
     }
-    if (Ns && S2.length > 1) {
-        S2 = S2.slice(1) + S2[0];
-    }
-    return S2;
+    I3 += If.join("");
+    I4 += I6;
+  }
+  if (I0 && I3.length > 1) {
+    I3 = I3.slice(1) + I3[0];
+  }
+  return I3;
 }
 
-function pseudoRandomShuffle(S7: string, S8: boolean = false): string {
-    var S9 = S7.length;
-    if (S9 <= 1) {
-        return S7;
-    }
-    for (var SI = function (Su: number, Sz: number) {
-        return (Su * Su * 1103515245 + Su * 12345 + Sz * 2654435761 >>> 0 & 4294967295) >>> 0;
-    }, Sx = [], Sg = 0; Sg < S9; Sg++) {
-        Sx.push({
-            i: Sg,
-            k: SI(Sg, S9)
-        });
-    }
-    Sx.sort(function (Su, Sz) {
-        if (Su.k === Sz.k) {
-            return Su.i - Sz.i;
-        } else {
-            return Su.k - Sz.k;
-        }
+function pseudoRandomShuffle(If: string, IT: boolean = false): string {
+  var Iz = If.length;
+  if (Iz <= 1) {
+    return If;
+  }
+  for (var Ic = function (Iw: number, Iu: number) {
+    return (Iw * Iw * 1103515245 + Iw * 12345 + Iu * 2654435761 >>> 0 & 4294967295) >>> 0;
+  }, II = [], Ix = 0; Ix < Iz; Ix++) {
+    II.push({
+      i: Ix,
+      k: Ic(Ix, Iz)
     });
-    for (var SO = Sx.map(function (Su) {
-        return Su.i;
-    }), SN = new Array(S9), SS = 0; SS < S9; SS++) {
-        SN[SO[SS]] = SS;
+  }
+  II.sort(function (Iw, Iu) {
+    if (Iw.k === Iu.k) {
+      return Iw.i - Iu.i;
+    } else {
+      return Iw.k - Iu.k;
     }
-    for (var SA = new Array(S9), SX = 0; SX < S9; SX++) {
-        SA[SX] = S7[SN[SX]];
-    }
-    var Sk = SA.join("");
-    if (S8 && Sk.length > 1) {
-        Sk = Sk.slice(-1) + Sk.slice(0, -1);
-    }
-    return Sk;
+  });
+  for (var IA = II.map(function (Iw) {
+    return Iw.i;
+  }), Ih = new Array(Iz), Ik = 0; Ik < Iz; Ik++) {
+    Ih[IA[Ik]] = Ik;
+  }
+  for (var Iq = new Array(Iz), Io = 0; Io < Iz; Io++) {
+    Iq[Io] = If[Ih[Io]];
+  }
+  var IZ = Iq.join("");
+  if (IT && IZ.length > 1) {
+    IZ = IZ.slice(-1) + IZ.slice(0, -1);
+  }
+  return IZ;
 };
+
 
 const Alloha: Parser = {
     name: "Alloha",
@@ -128,7 +135,7 @@ const Alloha: Parser = {
 
             const accessToken = pseudoRandomShuffle(modularEncode(xorShuffle(userToken, false), false), false);
 
-            const directLinks = await fetch(`https://alloha.yani.tv/aqs/movies/${id}`, {
+            const directLinks = await fetch(`https://alloha.yani.tv/oqs/movies/${id}`, {
                 method: "POST",
                 body: `token=${jsonString?.ads?.replace ? jsonString?.ads?.replace['[token]'] : baseToken}&av1=true&autoplay=0&audio=&subtitle=`,
                 headers: {
