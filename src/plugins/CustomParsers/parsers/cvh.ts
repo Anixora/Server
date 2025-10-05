@@ -13,9 +13,9 @@ const CVH: Parser = {
     name: "CVH",
     type: "cvh",
     async parseEpisode(link: URL): Promise<IDirectLinks | null> {
-        const dubberRegex = new RegExp(/dubbing_code=(?<dubber>[^.*&]+)/);
-        const animeIdRegex = new RegExp(/anime_id=(?<anime>[^d&]+)/);
-        const episodeRegex = new RegExp(/episode=(?<episode>[^d&]+)/);
+        const dubberRegex = /dubbing_code=(?<dubber>[^.*&]+)/;
+        const animeIdRegex = /anime_id=(?<anime>[^d&]+)/;
+        const episodeRegex = /episode=(?<episode>[^d&]+)/;
 
         const dubber = decodeURIComponent(dubberRegex.exec(link.search)?.groups!?.dubber).replace(/\+/g, " ") ?? null;
         const animeId = animeIdRegex.exec(link.search)?.groups?.anime ?? null;

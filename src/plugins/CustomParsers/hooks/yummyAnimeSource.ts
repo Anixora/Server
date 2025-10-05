@@ -2,8 +2,8 @@ import { Hook } from "../../../types/hook";
 import { getReleaseByID, getYummyAnimeRelease, getYASourcesLinks, getTypes, sourcesId } from "../utils";
 import { INSTANCE_API_URL } from "../../../config";
 
-const TARGET_REGEX = new RegExp(/\/episode\/target\/\d+\/\d+\/\d+/);
-const SOURCE_REGEX = new RegExp(/^(?<source>\d{7})(?<dubber>\d*.)?$/);
+const TARGET_REGEX = /\/episode\/target\/\d+\/\d+\/\d+/;
+const SOURCE_REGEX = /^(?<source>\d{7})(?<dubber>\d*.)?$/;
 
 function returnSources(validSources: Array<Record<string, any>>): Array<Record<string, any>> {
     let playersName: Array<string> = [];
@@ -25,7 +25,9 @@ const YummySources: Hook = {
     name: "YummyAnime Sources",
     method: "GET",
     matchUrl(link: URL) {
-        if (new RegExp(/\/episode\/\d+\/\d+/g).test(link.pathname) || new RegExp(/\/episode\/\d+\/\d+\/\d+/g).test(link.pathname) || TARGET_REGEX.test(link.pathname)) return true;
+        if (new RegExp(/\/episode\/\d+\/\d+/g).test(link.pathname) ||
+            new RegExp(/\/episode\/\d+\/\d+\/\d+/g).test(link.pathname) ||
+            TARGET_REGEX.test(link.pathname)) return true;
         return false;
     },
     async modifyResponse(data: Record<string, any>, link: URL, logger) {

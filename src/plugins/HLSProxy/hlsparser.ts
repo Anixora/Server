@@ -15,7 +15,7 @@ interface ModifyOptions {
     originUrl: string
 }
 
-const M3U8_LINE_SEPARATOR_REGEX = new RegExp(/\s*[\r\n]+\s*/);
+const M3U8_LINE_SEPARATOR_REGEX = /\s*[\r\n]+\s*/;
 
 export class HLSParser {
     public static modifyManifest(content: string, originalLink: string, instanceLink: string, options?: ModifyOptions): modifiedManifest | null {
