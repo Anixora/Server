@@ -13,5 +13,5 @@ export const DEFAULT_ANIXART_HEADERS: ANIXART_HEADERS = {
     "Content-Type": "application/json"
 };
 
-export const BAPROXY_VERSION: string = "0.0.1";
+export const SERVER_VERSION: string = "0.0.1";
 export const SERVER_PORT: number = 3000;

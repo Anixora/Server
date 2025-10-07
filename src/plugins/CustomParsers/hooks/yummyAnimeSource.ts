@@ -91,7 +91,7 @@ const YummySources: Hook = {
                             "@id": 3,
                             episodes_count: 0,
                             id: Number(sourceInfo?.groups?.source),
-                            name: source?.sourceName ?? "Custom Parser [BetterAnixart]",
+                            name: source?.sourceName ?? "Custom Parser",
                             type: dubber
                         },
                         name: `[CP] ${Number(info[5])} серия`,

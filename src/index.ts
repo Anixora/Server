@@ -1,6 +1,6 @@
 import express from 'express';
 import { Express } from 'express';
-import { ANIXART_API_URL, ANIXART_HEADERS, BAPROXY_VERSION, DEFAULT_ANIXART_HEADERS, INSTANCE_API_URL, SERVER_PORT } from './config';
+import { ANIXART_API_URL, ANIXART_HEADERS, SERVER_VERSION, DEFAULT_ANIXART_HEADERS, INSTANCE_API_URL, SERVER_PORT } from './config';
 import { readdirSync, existsSync } from 'fs';
 import { Hook } from './types/hook';
 import { LOGGER_LEVEL } from "./logger";
@@ -64,8 +64,9 @@ export class AnixartServer {
         this.plugins = loadPlugins(this.app, this.hooks);
 
         this.app.get("/", (req, res) => {
-            res.status(200).send({ code: 0, message: "[BetterAnixart Proxy] Instance has been ready!", info: {
-                version: BAPROXY_VERSION,
+            res.status(200).send({ code: 0, message: "[Anixora] Instance has been ready!", info: {
+                version: SERVER_VERSION,
+                responseTime: Date.now()
             }})
         });
 
@@ -156,7 +157,7 @@ export class AnixartServer {
         this.app.listen(port, (e) => {
             console.clear();
             console.log(ASCII_ART);
-            console.log(`\tBetterAnixart Proxy v${BAPROXY_VERSION}\n\tby DesConnet\n\n\t(https://github.com/BetterAnixart/BAProxy)\n`);
+            console.log(`\tAnixora server v${SERVER_VERSION}\n\tby DesConnet\n\n\t(https://github.com/Anixora/Server)\n`);
             logger.info(`Server has been started on port ${port}!`);
             logger.info(`Your instance url: ${INSTANCE_API_URL}`);
         })
